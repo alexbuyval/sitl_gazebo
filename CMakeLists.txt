@@ -4,7 +4,7 @@ find_package( PkgConfig REQUIRED)
 pkg_check_modules( EIGEN3 REQUIRED eigen3 )
 
 FIND_PACKAGE( Boost 1.40 COMPONENTS system thread REQUIRED )
-pkg_check_modules(GAZEBO REQUIRED gazebo>=6.0)
+pkg_check_modules(GAZEBO REQUIRED gazebo>=5.0)
 pkg_check_modules(SDF sdformat)
 add_definitions(-std=c++11)
 
@@ -27,13 +27,13 @@ include_directories(
 set(enable_mavlink_interface "true")
 set(enable_ground_truth "false")
 set(enable_logging "false")
-set(enable_camera "false")
+set(enable_camera "true")
 set(rotors_description_dir "${CMAKE_SOURCE_DIR}/models/rotors_description")
 set(scripts_dir "${CMAKE_SOURCE_DIR}/scripts")
 add_custom_target(sdf
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	COMMAND rm -f ${CMAKE_SOURCE_DIR}/models/iris/iris.sdf
-	COMMAND python ${scripts_dir}/xacro.py -o  ${rotors_description_dir}/urdf/iris_base.urdf  ${rotors_description_dir}/urdf/iris_base.xacro enable_mavlink_interface:=${enable_mavlink_interface} enable_ground_truth:=${enable_ground_truth} enable_logging:=${enable_logging} rotors_description_dir:=${rotors_description_dir} 
+	COMMAND python ${scripts_dir}/xacro.py -o  ${rotors_description_dir}/urdf/iris_base.urdf  ${rotors_description_dir}/urdf/iris_base.xacro enable_camera:=${enable_camera}  enable_mavlink_interface:=${enable_mavlink_interface} enable_ground_truth:=${enable_ground_truth} enable_logging:=${enable_logging} rotors_description_dir:=${rotors_description_dir} 
 	COMMAND gz sdf -p  ${rotors_description_dir}/urdf/iris_base.urdf >> ${CMAKE_SOURCE_DIR}/models/iris/iris.sdf
 	COMMAND rm -f ${rotors_description_dir}/urdf/iris_base.urdf
 	)
@@ -66,3 +66,6 @@ add_library(rotors_gazebo_mavlink_interface SHARED src/gazebo_mavlink_interface.
 target_link_libraries(rotors_gazebo_mavlink_interface mav_msgs ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${SDF_LIBRARIES} ${Boost_SYSTEM_LIBRARY_RELEASE} ${Boost_THREAD_LIBRARY_RELEASE})
 add_dependencies(rotors_gazebo_mavlink_interface mav_msgs)
 
+add_library(rotors_gazebo_sonar_plugin SHARED src/gazebo_sonar_plugin.cpp)
+target_link_libraries(rotors_gazebo_sonar_plugin mav_msgs ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${SDF_LIBRARIES} ${Boost_SYSTEM_LIBRARY_RELEASE} ${Boost_THREAD_LIBRARY_RELEASE})
+add_dependencies(rotors_gazebo_sonar_plugin mav_msgs)
