@@ -42,12 +42,6 @@
       horizontal_fov image_width image_height image_format min_distance
       max_distance noise_mean noise_stddev enable_visual *cylinder *origin">
     <link name="${namespace}/camera_${camera_suffix}_link">
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-          <xacro:insert_block name="cylinder" />
-        </geometry>
-      </collision>
       <xacro:if value="${enable_visual}">
         <visual>
           <origin xyz="0 0 0" rpy="0 1.57079632679 0" />
@@ -63,10 +57,11 @@
         <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
       </inertial>
     </link>
-    <joint name="${namespace}/camera_${camera_suffix}_joint" type="fixed">
+    <joint name="${namespace}/camera_${camera_suffix}_joint" type="revolute">
       <xacro:insert_block name="origin" />
       <parent link="${parent_link}" />
       <child link="${namespace}/camera_${camera_suffix}_link" />
+      <limit upper="0" lower="0" effort="0" velocity="0" />
     </joint>
     <gazebo reference="${namespace}/camera_${camera_suffix}_link">
       <sensor type="camera" name="${namespace}_camera_${camera_suffix}">

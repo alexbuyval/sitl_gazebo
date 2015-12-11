@@ -97,14 +97,14 @@
     </xacro:bag_plugin_macro>
   </xacro:if>
   
-  <!-- Downward facing camera 
-  <xacro:if value="$(arg enable_camera)">-->
+  <!-- Downward facing camera -->
+  <xacro:if value="$(arg enable_camera)">
     <xacro:camera_macro 
       namespace="${namespace}" 
       parent_link="base_link" 
       camera_suffix="bottom" 
       frame_rate="30"
-      horizontal_fov = "81"
+      horizontal_fov = "1.41"
       image_width = "640" 
       image_height = "480"
       image_format="R8G8B8"
@@ -113,9 +113,10 @@
       noise_mean = "0.0"
       noise_stddev = "0.0" 
       enable_visual = "true">
-	<origin xyz="0.15 0.0 0.0" rpy="0 ${M_PI/2} 0"/>
+      <cylinder length="0.01" radius="0.003"/>
+      <origin xyz="0.0 0.0 -0.005" rpy="0 1.57 0"/>
     </xacro:camera_macro>  
-  <!--</xacro:if>-->
+  </xacro:if>
 
 </robot>
 
